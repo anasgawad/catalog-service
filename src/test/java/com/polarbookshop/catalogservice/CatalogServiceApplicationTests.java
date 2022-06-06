@@ -69,7 +69,8 @@ class CatalogServiceApplicationTests {
                 .expectStatus().isCreated()
                 .expectBody(Book.class).value(book -> assertThat(book).isNotNull())
                 .returnResult().getResponseBody();
-        var bookToUpdate = Book.build(createdBook.isbn(), createdBook.title(), createdBook.author(), 7.95, "Polarsophia");
+        var bookToUpdate = new Book(createdBook.id(), createdBook.isbn(), createdBook.title(), createdBook.author(), 7.95,
+                createdBook.publisher(), createdBook.createdDate(), createdBook.lastModifiedDate(), createdBook.version());
 
         webTestClient
                 .put()
@@ -106,7 +107,7 @@ class CatalogServiceApplicationTests {
                 .exchange()
                 .expectStatus().isNotFound()
                 .expectBody(String.class).value(errorMessage ->
-                    assertThat(errorMessage).isEqualTo("The book with ISBN " + bookIsbn + " was not found.")
+                        assertThat(errorMessage).isEqualTo("The book with ISBN " + bookIsbn + " was not found.")
                 );
     }
 
